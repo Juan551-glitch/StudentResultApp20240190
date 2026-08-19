@@ -84,6 +84,23 @@ This project was created for:
 * GitHub Actions learning
 * Azure DevOps concepts demonstration
 
+## Azure SQL configuration
+
+The application reads its Azure SQL connection string from the `StudentResultsDB`
+connection-string setting. In Azure App Service, add a connection string named
+`StudentResultsDB` (or an application setting named
+`ConnectionStrings__StudentResultsDB`) containing the Azure SQL connection string.
+Do not commit credentials to `appsettings.json`.
+
+For local development, use .NET user secrets:
+
+```powershell
+dotnet user-secrets set "ConnectionStrings:StudentResultsDB" "Server=tcp:<server>.database.windows.net,1433;Initial Catalog=StudentResultsDB;User ID=<user>;Password=<password>;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+```
+
+The database must contain `dbo.StudentResults` with the schema supplied for this
+project.
+
 ##  Author
 
 **Lusukama Selemani**
