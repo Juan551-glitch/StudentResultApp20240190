@@ -8,8 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ModuleService>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? builder.Configuration["DefaultConnection"]
+    ?? builder.Configuration.GetConnectionString("StudentResultsDB");
+
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StudentResultsDB")));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
