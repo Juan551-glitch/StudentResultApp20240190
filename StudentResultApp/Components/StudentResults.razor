@@ -4,6 +4,7 @@
 @using StudentResultApp.Data
 @using StudentResultApp.Models
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@inject ILogger<StudentResults> Logger
 
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-dark text-white">
@@ -101,8 +102,9 @@
                 .OrderByDescending(result => result.ResultID)
                 .ToListAsync();
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Logger.LogError(exception, "Unable to load student results from Azure SQL.");
             statusCssClass = "alert-danger";
             statusMessage = "Student results could not be loaded. Check the DefaultConnection value in Azure App Service settings.";
         }
@@ -132,10 +134,11 @@
             statusCssClass = "alert-success";
             statusMessage = "Student result saved successfully.";
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Logger.LogError(exception, "Unable to save a student result to Azure SQL.");
             statusCssClass = "alert-danger";
-            statusMessage = "The result could not be saved. Check the Azure SQL connection and try again.";
+            statusMessage = "The result could not be saved. Check Azure Log Stream for the database error, then try again.";
         }
         finally
         {
