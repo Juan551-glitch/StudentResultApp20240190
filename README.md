@@ -101,6 +101,22 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=tcp:<serve
 The database must contain `dbo.StudentResults` with the schema supplied for this
 project.
 
+### Passwordless Azure SQL access
+
+When `DefaultConnection` uses `Authentication=Active Directory Default`, no SQL
+username or password is supplied. Enable the App Service's **system-assigned
+managed identity**, configure a Microsoft Entra administrator for the Azure SQL
+server, and connect to `StudentResultsDB` as that administrator to run:
+
+```sql
+CREATE USER [<your-app-service-name>] FROM EXTERNAL PROVIDER;
+ALTER ROLE db_datareader ADD MEMBER [<your-app-service-name>];
+ALTER ROLE db_datawriter ADD MEMBER [<your-app-service-name>];
+```
+
+The App Service must also be able to reach the Azure SQL server through its
+network/firewall configuration.
+
 ##  Author
 
 **Lusukama Selemani**
