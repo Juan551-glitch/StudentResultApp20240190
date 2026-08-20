@@ -9,9 +9,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ModuleService>();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? builder.Configuration["DefaultConnection"]
-    ?? builder.Configuration.GetConnectionString("StudentResultsDB");
+var connectionString = new[]
+{
+    builder.Configuration.GetConnectionString("DefaultConnection"),
+    builder.Configuration["DefaultConnection"],
+    builder.Configuration.GetConnectionString("StudentResultsDB")
+}.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
 
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
